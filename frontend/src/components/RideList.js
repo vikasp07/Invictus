@@ -16,25 +16,46 @@ const RideList = () => {
   };
 
   return (
-    <div className="container">
+    <div className="container animate-slide-up">
       <h2>Available Rides</h2>
-      {rides.map((ride) => (
-        <div key={ride._id} className="ride-card">
-          <p>
-            <strong>From:</strong> {ride.pickup}
-          </p>
-          <p>
-            <strong>To:</strong> {ride.destination}
-          </p>
-          <p>
-            <strong>Driver:</strong> {ride.driver.name}
-          </p>
-          <p>
-            <strong>Fare:</strong> ₹{ride.fare}
-          </p>
-          <button onClick={() => handleJoin(ride._id)}>Join Ride</button>
-        </div>
-      ))}
+      {rides.length === 0 ? (
+        <p>No rides available at the moment.</p>
+      ) : (
+        rides.map((ride) => (
+          <div key={ride._id} className="card">
+            <p>
+              <strong>From:</strong> {ride.pickup}
+            </p>
+            <p>
+              <strong>To:</strong> {ride.destination}
+            </p>
+            <p>
+              <strong>Driver:</strong> {ride.driver.name}
+            </p>
+            <p>
+              <strong>Fare:</strong> ₹{ride.fare}
+            </p>
+            <p>
+              <strong>Scheduled Time:</strong>{" "}
+              {ride.scheduledTime
+                ? new Date(ride.scheduledTime).toLocaleString()
+                : "ASAP"}
+            </p>
+            {ride.status === "pending" && (
+              <button className="btn" onClick={() => handleJoin(ride._id)}>
+                Join Ride
+              </button>
+            )}
+            {ride.status === "confirmed" && (
+              <div className="confirmed-info">
+                <p>Ride Confirmed!</p>
+                <p>Estimated Time: {ride.estimatedTime} mins</p>
+                <p>Final Fare: ₹{ride.finalFare}</p>
+              </div>
+            )}
+          </div>
+        ))
+      )}
     </div>
   );
 };

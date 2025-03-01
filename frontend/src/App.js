@@ -1,30 +1,85 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import LandingPage from "./components/LandingPage";
+import Login from "./components/Login";
+import Register from "./components/Register";
 import RideList from "./components/RideList";
 import CreateRide from "./components/CreateRide";
-import Register from "./components/Register";
-import Login from "./components/Login";
+import MapTracker from "./components/MapTracker";
+import OwnerDashboard from "./components/OwnerDashboard";
+import Feedback from "./components/Feedback";
+import SOS from "./components/SOS";
+import AdminDashboard from "./components/AdminDashboard";
 import "./styles.css";
 
 function App() {
+  const user = JSON.parse(localStorage.getItem("user"));
+
   return (
     <Router>
       <div className="App">
-        <nav className="navbar">
-          <h2>RideShare</h2>
-          <div>
-            <Link to="/">Home</Link>
-            <Link to="/create">Create Ride</Link>
-            <Link to="/register">Register</Link>
-            <Link to="/login">Login</Link>
-          </div>
-        </nav>
+        {user ? (
+          <nav className="navbar">
+            <h2>RideShare</h2>
+            <div className="nav-links">
+              {user.role === "user" ? (
+                <>
+                  <Link to="/rides">Book Ride</Link>
+                  <Link to="/create">Create Ride</Link>
+                </>
+              ) : (
+                <Link to="/owner">Owner Dashboard</Link>
+              )}
+              <Link to="/map">Track Ride</Link>
+              <Link to="/feedback">Feedback</Link>
+              <Link to="/sos">SOS</Link>
+              <Link to="/admin">Admin</Link>
+              <Link
+                to="/logout"
+                onClick={() => {
+                  localStorage.clear();
+                  window.location.href = "/";
+                }}
+              >
+                Logout
+              </Link>
+            </div>
+          </nav>
+        ) : (
+          <nav className="navbar">
+            <h2>RideShare</h2>
+            <div className="nav-links">
+              <Link to="/login">Login</Link>
+              <Link to="/register">Register</Link>
+            </div>
+          </nav>
+        )}
 
         <Routes>
-          <Route path="/" element={<RideList />} />
-          <Route path="/create" element={<CreateRide />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />} />
+          {user ? (
+            <>
+              {user.role === "user" ? (
+                <>
+                  <Route path="/rides" element={<RideList />} />
+                  <Route path="/create" element={<CreateRide />} />
+                </>
+              ) : (
+                <Route path="/owner" element={<OwnerDashboard />} />
+              )}
+              <Route path="/map" element={<MapTracker />} />
+              <Route path="/feedback" element={<Feedback />} />
+              <Route path="/sos" element={<SOS />} />
+              <Route path="/admin" element={<AdminDashboard />} />
+              <Route path="*" element={<RideList />} />
+            </>
+          ) : (
+            <>
+              <Route path="/" element={<LandingPage />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="*" element={<LandingPage />} />
+            </>
+          )}
         </Routes>
       </div>
     </Router>

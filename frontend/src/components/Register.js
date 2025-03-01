@@ -8,12 +8,13 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
   const [location, setLocation] = useState("");
+  const [role, setRole] = useState("user");
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await register({ name, email, password, phone, location });
+      await register({ name, email, password, phone, location, role });
       alert("Registration successful");
       navigate("/login");
     } catch (err) {
@@ -22,10 +23,11 @@ const Register = () => {
   };
 
   return (
-    <div className="container">
+    <div className="form-container animate-fade-in">
       <h2>Register</h2>
       <form onSubmit={handleSubmit}>
         <input
+          className="form-input"
           type="text"
           placeholder="Name"
           value={name}
@@ -33,6 +35,7 @@ const Register = () => {
           required
         />
         <input
+          className="form-input"
           type="email"
           placeholder="Email"
           value={email}
@@ -40,6 +43,7 @@ const Register = () => {
           required
         />
         <input
+          className="form-input"
           type="password"
           placeholder="Password"
           value={password}
@@ -47,6 +51,7 @@ const Register = () => {
           required
         />
         <input
+          className="form-input"
           type="text"
           placeholder="Phone"
           value={phone}
@@ -54,13 +59,38 @@ const Register = () => {
           required
         />
         <input
+          className="form-input"
           type="text"
           placeholder="Location"
           value={location}
           onChange={(e) => setLocation(e.target.value)}
           required
         />
-        <button type="submit">Register</button>
+        <div className="radio-group">
+          <label>
+            <input
+              type="radio"
+              name="role"
+              value="user"
+              checked={role === "user"}
+              onChange={(e) => setRole(e.target.value)}
+            />
+            User
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="role"
+              value="owner"
+              checked={role === "owner"}
+              onChange={(e) => setRole(e.target.value)}
+            />
+            Vehicle Owner
+          </label>
+        </div>
+        <button className="btn" type="submit">
+          Register
+        </button>
       </form>
     </div>
   );
