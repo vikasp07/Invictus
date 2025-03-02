@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { login } from "../services/api";
 import { useNavigate } from "react-router-dom";
+import "./Login.css";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -20,11 +21,11 @@ const Login = () => {
   };
 
   return (
-    <div className="form-container animate-fade-in">
+    <div className="login-container">
       <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
+      <form className="login-form" onSubmit={handleSubmit}>
         <input
-          className="form-input"
+          className="login-input"
           type="email"
           placeholder="Email"
           value={email}
@@ -32,7 +33,7 @@ const Login = () => {
           required
         />
         <input
-          className="form-input"
+          className="login-input"
           type="password"
           placeholder="Password"
           value={password}

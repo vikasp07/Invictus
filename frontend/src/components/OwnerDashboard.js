@@ -1,11 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { getAvailableRides, confirmRide } from "../services/api";
 import { useNavigate } from "react-router-dom";
+import "./OwnerDashboard.css";
+
+const ADMIN_ID = "ADMIN123"; // Replace with the actual admin user's id if needed
 
 const OwnerDashboard = () => {
   const [rides, setRides] = useState([]);
   const navigate = useNavigate();
   const owner = JSON.parse(localStorage.getItem("user"));
+
+  // Restrict access: Only allow if user role is 'owner'
+  if (!owner || owner.role !== "owner") {
+    navigate("/");
+    return null;
+  }
 
   useEffect(() => {
     getAvailableRides().then((res) => setRides(res.data));
@@ -22,7 +31,6 @@ const OwnerDashboard = () => {
       })
         .then(() => {
           alert("Ride confirmed successfully!");
-          // Refresh the list
           getAvailableRides().then((res) => setRides(res.data));
         })
         .catch((err) => alert("Error confirming ride"));
@@ -30,12 +38,12 @@ const OwnerDashboard = () => {
   };
 
   return (
-    <div className="container animate-slide-up">
+    <div className="owner-dashboard-container">
       <h2>Owner Dashboard</h2>
       <p>Pending ride requests:</p>
       {rides.length === 0 && <p>No pending rides available.</p>}
       {rides.map((ride) => (
-        <div key={ride._id} className="card">
+        <div key={ride._id} className="ride-card">
           <p>
             <strong>From:</strong> {ride.pickup}
           </p>

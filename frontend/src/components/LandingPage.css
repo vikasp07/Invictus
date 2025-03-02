@@ -1,0 +1,41 @@
+.landing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 60px 20px;
+  animation: fadeIn 2s ease-out;
+}
+
+.landing-title {
+  font-size: 3rem;
+  margin-bottom: 20px;
+  color: #1e90ff;
+}
+
+.landing-subtitle {
+  font-size: 1.2rem;
+  margin-bottom: 40px;
+}
+
+.landing-buttons .btn {
+  margin: 0 10px;
+  padding: 12px 25px;
+  background-color: #1e90ff;
+  color: #fff;
+  border: none;
+  border-radius: 25px;
+  transition: background-color 0.3s ease;
+}
+
+.landing-buttons .btn:hover {
+  background-color: #1c86ee;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

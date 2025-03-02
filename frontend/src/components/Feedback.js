@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { submitFeedback } from "../services/api";
+import "./Feedback.css";
 
 const Feedback = () => {
   const [message, setMessage] = useState("");
@@ -19,11 +20,11 @@ const Feedback = () => {
   };
 
   return (
-    <div className="form-container animate-fade-in">
+    <div className="feedback-container">
       <h2>Feedback & Support</h2>
-      <form onSubmit={handleSubmit}>
+      <form className="feedback-form" onSubmit={handleSubmit}>
         <textarea
-          className="form-textarea"
+          className="feedback-textarea"
           placeholder="Your feedback"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
@@ -32,7 +33,7 @@ const Feedback = () => {
         <br />
         <label>Rating: </label>
         <select
-          className="form-input"
+          className="feedback-select"
           value={rating}
           onChange={(e) => setRating(e.target.value)}
         >

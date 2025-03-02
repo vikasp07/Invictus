@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import io from "socket.io-client";
+import "./MapTracker.css";
 
 const MapTracker = () => {
   const mapRef = useRef(null);
@@ -7,7 +8,6 @@ const MapTracker = () => {
   const socketRef = useRef(null);
 
   useEffect(() => {
-    // Initialize Google Map with Mumbai center
     const initMap = () => {
       const map = new window.google.maps.Map(mapRef.current, {
         center: { lat: 19.076, lng: 72.8777 },
@@ -31,7 +31,6 @@ const MapTracker = () => {
       initMap();
     }
 
-    // Connect to Socket.io for location updates
     socketRef.current = io("http://localhost:5000");
     socketRef.current.on("locationUpdate", (data) => {
       const { lat, lng } = data;
@@ -46,7 +45,7 @@ const MapTracker = () => {
   }, []);
 
   return (
-    <div className="container animate-slide-up">
+    <div className="map-tracker-container">
       <h2>Real-Time Ride Tracking</h2>
       <div ref={mapRef} className="map-container"></div>
     </div>

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { createRide } from "../services/api";
 import { useNavigate } from "react-router-dom";
+import "./CreateRide.css";
 
 const mumbaiAreas = [
   "Andheri",
@@ -42,9 +43,9 @@ const CreateRide = () => {
   };
 
   return (
-    <div className="form-container animate-slide-up">
+    <div className="create-ride-container">
       <h2>Create Ride</h2>
-      <form onSubmit={handleSubmit}>
+      <form className="create-ride-form" onSubmit={handleSubmit}>
         <label>Pickup Location:</label>
         <select
           value={pickup}
@@ -71,7 +72,7 @@ const CreateRide = () => {
         </select>
         <input
           type="number"
-          className="form-input"
+          className="ride-input"
           placeholder="Distance (km)"
           value={distance}
           onChange={(e) => setDistance(e.target.value)}
@@ -79,7 +80,7 @@ const CreateRide = () => {
         />
         <input
           type="number"
-          className="form-input"
+          className="ride-input"
           placeholder="Duration (min)"
           value={duration}
           onChange={(e) => setDuration(e.target.value)}
@@ -87,7 +88,7 @@ const CreateRide = () => {
         />
         <input
           type="datetime-local"
-          className="form-input"
+          className="ride-input"
           placeholder="Scheduled Time (optional)"
           value={scheduledTime}
           onChange={(e) => setScheduledTime(e.target.value)}

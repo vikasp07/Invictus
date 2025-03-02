@@ -1,0 +1,28 @@
+.sos-container {
+  width: 90%;
+  max-width: 500px;
+  margin: 40px auto;
+  background: #fff;
+  padding: 25px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 1.5s ease-out;
+  text-align: center;
+}
+
+.sos-btn {
+  background-color: #ff4d4d;
+}
+
+.sos-btn:hover {
+  background-color: #ff1a1a;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

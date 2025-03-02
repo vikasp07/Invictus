@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { getAvailableRides, joinRide } from "../services/api";
+import "./RideList.css";
 
 const RideList = () => {
   const [rides, setRides] = useState([]);
@@ -16,13 +17,13 @@ const RideList = () => {
   };
 
   return (
-    <div className="container animate-slide-up">
+    <div className="ride-list-container">
       <h2>Available Rides</h2>
       {rides.length === 0 ? (
         <p>No rides available at the moment.</p>
       ) : (
         rides.map((ride) => (
-          <div key={ride._id} className="card">
+          <div key={ride._id} className="ride-card">
             <p>
               <strong>From:</strong> {ride.pickup}
             </p>

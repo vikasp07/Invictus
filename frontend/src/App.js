@@ -10,7 +10,7 @@ import OwnerDashboard from "./components/OwnerDashboard";
 import Feedback from "./components/Feedback";
 import SOS from "./components/SOS";
 import AdminDashboard from "./components/AdminDashboard";
-import "./styles.css";
+import "./styles.css"; // Global styles if needed
 
 function App() {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -33,7 +33,8 @@ function App() {
               <Link to="/map">Track Ride</Link>
               <Link to="/feedback">Feedback</Link>
               <Link to="/sos">SOS</Link>
-              <Link to="/admin">Admin</Link>
+              {/* Only admin user (with specific ID) can see admin page */}
+              {user._id === "ADMIN123" && <Link to="/admin">Admin</Link>}
               <Link
                 to="/logout"
                 onClick={() => {
@@ -69,7 +70,9 @@ function App() {
               <Route path="/map" element={<MapTracker />} />
               <Route path="/feedback" element={<Feedback />} />
               <Route path="/sos" element={<SOS />} />
-              <Route path="/admin" element={<AdminDashboard />} />
+              {user._id === "ADMIN123" && (
+                <Route path="/admin" element={<AdminDashboard />} />
+              )}
               <Route path="*" element={<RideList />} />
             </>
           ) : (
@@ -87,3 +90,5 @@ function App() {
 }
 
 export default App;
+
+// CnESdw9LKlUX3IeHAAAF

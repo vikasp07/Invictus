@@ -1,10 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { getAdminRides, getAdminUsers, getAnalytics } from "../services/api";
+import { useNavigate } from "react-router-dom";
+import "./AdminDashboard.css";
+
+const ADMIN_ID = "ADMIN123"; // Set this to the actual admin user id
 
 const AdminDashboard = () => {
   const [rides, setRides] = useState([]);
   const [users, setUsers] = useState([]);
   const [analytics, setAnalytics] = useState({});
+  const navigate = useNavigate();
+  const user = JSON.parse(localStorage.getItem("user"));
+  const token = localStorage.getItem("token");
+
+  // If no token or the logged-in user is not the admin, redirect.
+  if (!token || !user || user._id !== ADMIN_ID) {
+    navigate("/");
+    return null;
+  }
 
   useEffect(() => {
     getAdminRides().then((res) => setRides(res.data));
@@ -13,7 +26,7 @@ const AdminDashboard = () => {
   }, []);
 
   return (
-    <div className="container animate-slide-up">
+    <div className="admin-dashboard-container">
       <h2>Admin Dashboard</h2>
       <div className="analytics">
         <h3>Analytics</h3>

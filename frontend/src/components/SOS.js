@@ -1,4 +1,5 @@
 import React from "react";
+import "./SOS.css";
 
 const SOS = () => {
   const handleSOS = () => {
@@ -6,7 +7,7 @@ const SOS = () => {
   };
 
   return (
-    <div className="container animate-fade-in">
+    <div className="sos-container">
       <h2>Emergency Assistance</h2>
       <p>If you are in danger, press the button below to send an SOS alert.</p>
       <button className="btn sos-btn" onClick={handleSOS}>

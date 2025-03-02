@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { register } from "../services/api";
 import { useNavigate } from "react-router-dom";
+import "./Register.css";
 
 const Register = () => {
   const [name, setName] = useState("");
@@ -23,11 +24,11 @@ const Register = () => {
   };
 
   return (
-    <div className="form-container animate-fade-in">
+    <div className="register-container">
       <h2>Register</h2>
-      <form onSubmit={handleSubmit}>
+      <form className="register-form" onSubmit={handleSubmit}>
         <input
-          className="form-input"
+          className="register-input"
           type="text"
           placeholder="Name"
           value={name}
@@ -35,7 +36,7 @@ const Register = () => {
           required
         />
         <input
-          className="form-input"
+          className="register-input"
           type="email"
           placeholder="Email"
           value={email}
@@ -43,7 +44,7 @@ const Register = () => {
           required
         />
         <input
-          className="form-input"
+          className="register-input"
           type="password"
           placeholder="Password"
           value={password}
@@ -51,7 +52,7 @@ const Register = () => {
           required
         />
         <input
-          className="form-input"
+          className="register-input"
           type="text"
           placeholder="Phone"
           value={phone}
@@ -59,7 +60,7 @@ const Register = () => {
           required
         />
         <input
-          className="form-input"
+          className="register-input"
           type="text"
           placeholder="Location"
           value={location}
