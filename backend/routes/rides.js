@@ -2,25 +2,18 @@ const express = require("express");
 const Ride = require("../models/Ride");
 const router = express.Router();
 
-// Helper for dynamic fare calculation (example: base fare + factors)
-function calculateFare(distance, duration) {
-  const baseFare = 50;
-  const fare = baseFare + distance * 10 + duration * 0.5;
-  return Math.round(fare);
-}
-
-// Create a ride (user booking)
+// Create a ride request (user booking)
+// Now only accepts: driver, pickup, destination, scheduledTime
 router.post("/create", async (req, res) => {
-  const { driver, pickup, destination, distance, duration, scheduledTime } =
-    req.body;
-  const fare = calculateFare(distance, duration);
+  const { driver, pickup, destination, scheduledTime } = req.body;
   const ride = new Ride({
     driver,
     pickup,
     destination,
-    fare,
     scheduledTime,
     status: "pending",
+    fare: null, // to be set by owner on confirmation
+    estimatedTime: null,
     route: [],
     currentLocation: pickup,
   });
@@ -32,28 +25,28 @@ router.post("/create", async (req, res) => {
   }
 });
 
-// Get available (pending) rides
+// Get available rides (both pending and confirmed)
 router.get("/available", async (req, res) => {
   try {
-    const rides = await Ride.find({ status: "pending" }).populate(
-      "driver",
-      "name phone"
-    );
+    const rides = await Ride.find({
+      status: { $in: ["pending", "confirmed"] },
+    }).populate("driver", "name phone");
     res.json(rides);
   } catch (err) {
     res.status(500).json({ error: "Error fetching rides" });
   }
 });
 
-// Join a ride (carpool option)
+// Join a ride (for ride sharing)
 router.post("/join/:rideId", async (req, res) => {
   const { userId } = req.body;
   try {
     const ride = await Ride.findById(req.params.rideId);
     if (ride) {
-      ride.passengers.push(userId);
-      // Update fare per person (simple split)
-      ride.fare = Math.round(ride.fare / (ride.passengers.length + 1));
+      // Prevent duplicate join – add only if not already joined
+      if (!ride.passengers.includes(userId)) {
+        ride.passengers.push(userId);
+      }
       await ride.save();
       res.json({ message: "Ride joined successfully", ride });
     } else {
@@ -64,48 +57,7 @@ router.post("/join/:rideId", async (req, res) => {
   }
 });
 
-// Cancel a ride booking
-router.post("/cancel/:rideId", async (req, res) => {
-  const { userId } = req.body;
-  try {
-    const ride = await Ride.findById(req.params.rideId);
-    if (ride) {
-      if (
-        ride.driver.toString() === userId ||
-        ride.passengers.includes(userId)
-      ) {
-        ride.status = "cancelled";
-        await ride.save();
-        res.json({ message: "Ride cancelled successfully" });
-      } else {
-        res.status(403).json({ error: "Not authorized to cancel this ride" });
-      }
-    } else {
-      res.status(404).json({ error: "Ride not found" });
-    }
-  } catch (err) {
-    res.status(400).json({ error: "Error cancelling ride" });
-  }
-});
-
-// Update ride's current location (for real-time tracking)
-router.post("/update-location/:rideId", async (req, res) => {
-  const { currentLocation } = req.body;
-  try {
-    const ride = await Ride.findById(req.params.rideId);
-    if (ride) {
-      ride.currentLocation = currentLocation;
-      await ride.save();
-      res.json({ message: "Location updated", ride });
-    } else {
-      res.status(404).json({ error: "Ride not found" });
-    }
-  } catch (err) {
-    res.status(400).json({ error: "Error updating location" });
-  }
-});
-
-// Owner confirms a ride
+// Owner confirms a ride by providing estimated time and total fare
 router.post("/confirm/:rideId", async (req, res) => {
   const { ownerId, estimatedTime, finalFare } = req.body;
   try {
@@ -119,11 +71,28 @@ router.post("/confirm/:rideId", async (req, res) => {
     ride.status = "confirmed";
     ride.ownerConfirmation = ownerId;
     ride.estimatedTime = estimatedTime;
-    ride.finalFare = finalFare;
+    ride.fare = finalFare;
     await ride.save();
     res.json({ message: "Ride confirmed", ride });
   } catch (err) {
     res.status(400).json({ error: "Error confirming ride" });
+  }
+});
+
+// (Optional) Update ride’s current location for real-time tracking
+router.post("/update-location/:rideId", async (req, res) => {
+  const { currentLocation } = req.body;
+  try {
+    const ride = await Ride.findById(req.params.rideId);
+    if (ride) {
+      ride.currentLocation = currentLocation;
+      await ride.save();
+      res.json({ message: "Location updated", ride });
+    } else {
+      res.status(404).json({ error: "Ride not found" });
+    }
+  } catch (err) {
+    res.status(400).json({ error: "Error updating location" });
   }
 });
 

@@ -1,100 +1,64 @@
-import React, { useState } from "react";
-import { register } from "../services/api";
-import { useNavigate } from "react-router-dom";
-import "./Register.css";
+import React, { useEffect, useState } from "react";
+import { getAvailableRides, joinRide } from "../services/api";
+import "./RideList.css";
 
-const Register = () => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [phone, setPhone] = useState("");
-  const [location, setLocation] = useState("");
-  const [role, setRole] = useState("user");
-  const navigate = useNavigate();
+const RideList = () => {
+  const [rides, setRides] = useState([]);
+  const user = JSON.parse(localStorage.getItem("user"));
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      await register({ name, email, password, phone, location, role });
-      alert("Registration successful");
-      navigate("/login");
-    } catch (err) {
-      alert("Error registering user");
-    }
+  useEffect(() => {
+    getAvailableRides().then((res) => setRides(res.data));
+  }, []);
+
+  const handleJoin = (rideId) => {
+    joinRide(rideId, user._id).then(() =>
+      alert("Joined the ride successfully!")
+    );
   };
 
   return (
-    <div className="register-container">
-      <h2>Register</h2>
-      <form className="register-form" onSubmit={handleSubmit}>
-        <input
-          className="register-input"
-          type="text"
-          placeholder="Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-        />
-        <input
-          className="register-input"
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <input
-          className="register-input"
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <input
-          className="register-input"
-          type="text"
-          placeholder="Phone"
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-          required
-        />
-        <input
-          className="register-input"
-          type="text"
-          placeholder="Location"
-          value={location}
-          onChange={(e) => setLocation(e.target.value)}
-          required
-        />
-        <div className="radio-group">
-          <label>
-            <input
-              type="radio"
-              name="role"
-              value="user"
-              checked={role === "user"}
-              onChange={(e) => setRole(e.target.value)}
-            />
-            User
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="role"
-              value="owner"
-              checked={role === "owner"}
-              onChange={(e) => setRole(e.target.value)}
-            />
-            Vehicle Owner
-          </label>
-        </div>
-        <button className="btn" type="submit">
-          Register
-        </button>
-      </form>
+    <div className="ride-list-container">
+      <h2>Available Rides</h2>
+      {rides.length === 0 ? (
+        <p>No rides available at the moment.</p>
+      ) : (
+        rides.map((ride) => (
+          <div key={ride._id} className="ride-card">
+            <p>
+              <strong>From:</strong> {ride.pickup}
+            </p>
+            <p>
+              <strong>To:</strong> {ride.destination}
+            </p>
+            <p>
+              <strong>Ride Time:</strong>{" "}
+              {ride.scheduledTime
+                ? new Date(ride.scheduledTime).toLocaleString()
+                : "ASAP"}
+            </p>
+            {ride.status === "pending" && (
+              <button className="btn" onClick={() => handleJoin(ride._id)}>
+                Join Ride
+              </button>
+            )}
+            {ride.status === "confirmed" && (
+              <div className="confirmed-info">
+                <p>Ride Confirmed!</p>
+                <p>Estimated Time: {ride.estimatedTime} mins</p>
+                <p>
+                  Price per person: ₹
+                  {(
+                    ride.fare /
+                    (1 + (ride.passengers ? ride.passengers.length : 0))
+                  ).toFixed(2)}
+                </p>
+              </div>
+            )}
+          </div>
+        ))
+      )}
     </div>
   );
 };
 
-export default Register;
+export default RideList;

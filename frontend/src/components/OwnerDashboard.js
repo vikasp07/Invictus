@@ -1,32 +1,32 @@
 import React, { useEffect, useState } from "react";
 import { getAvailableRides, confirmRide } from "../services/api";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
 import "./OwnerDashboard.css";
-
-const ADMIN_ID = "ADMIN123"; // Replace with the actual admin user's id if needed
 
 const OwnerDashboard = () => {
   const [rides, setRides] = useState([]);
   const navigate = useNavigate();
   const owner = JSON.parse(localStorage.getItem("user"));
 
-  // Restrict access: Only allow if user role is 'owner'
-  if (!owner || owner.role !== "owner") {
-    navigate("/");
-    return null;
-  }
-
+  // Always call hooks unconditionally.
   useEffect(() => {
-    getAvailableRides().then((res) => setRides(res.data));
-  }, []);
+    if (owner && owner.role === "owner") {
+      getAvailableRides().then((res) => setRides(res.data));
+    }
+  }, [owner]);
+
+  // After hooks, conditionally render redirect if user is not an owner.
+  if (!owner || owner.role !== "owner") {
+    return <Navigate to="/" />;
+  }
 
   const handleConfirm = (rideId) => {
     const estimatedTime = prompt("Enter estimated time (in minutes):");
-    const finalFare = prompt("Enter final fare (in INR):");
+    const finalFare = prompt("Enter total fare (in INR):");
     if (estimatedTime && finalFare) {
       confirmRide(rideId, {
         ownerId: owner._id,
-        estimatedTime: parseInt(estimatedTime),
+        estimatedTime: parseInt(estimatedTime, 10),
         finalFare: parseFloat(finalFare),
       })
         .then(() => {
@@ -51,10 +51,7 @@ const OwnerDashboard = () => {
             <strong>To:</strong> {ride.destination}
           </p>
           <p>
-            <strong>Fare (Estimated):</strong> ₹{ride.fare}
-          </p>
-          <p>
-            <strong>Scheduled Time:</strong>{" "}
+            <strong>Ride Time:</strong>{" "}
             {ride.scheduledTime
               ? new Date(ride.scheduledTime).toLocaleString()
               : "ASAP"}
@@ -70,7 +67,7 @@ const OwnerDashboard = () => {
                 <strong>Ride Confirmed!</strong>
               </p>
               <p>Estimated Time: {ride.estimatedTime} mins</p>
-              <p>Final Fare: ₹{ride.finalFare}</p>
+              <p>Total Fare: ₹{ride.fare}</p>
             </div>
           )}
         </div>

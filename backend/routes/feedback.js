@@ -2,7 +2,6 @@ const express = require("express");
 const Feedback = require("../models/Feedback");
 const router = express.Router();
 
-// Submit feedback
 router.post("/", async (req, res) => {
   const { user, message, rating } = req.body;
   const feedback = new Feedback({ user, message, rating });
@@ -14,7 +13,6 @@ router.post("/", async (req, res) => {
   }
 });
 
-// Get all feedback (for admin review)
 router.get("/", async (req, res) => {
   try {
     const feedbacks = await Feedback.find().populate("user", "name email");

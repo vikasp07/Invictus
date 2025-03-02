@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const router = express.Router();
 
-// User Registration (with role)
+// User Registration
 router.post("/register", async (req, res) => {
   const { name, email, password, phone, location, role } = req.body;
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -24,13 +24,13 @@ router.post("/register", async (req, res) => {
   }
 });
 
-// User Login (unchanged)
+// User Login with token expiry of 24 hours
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
   if (user && (await bcrypt.compare(password, user.password))) {
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "7d",
+      expiresIn: "24h",
     });
     res.json({ token, user });
   } else {

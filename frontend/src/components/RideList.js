@@ -1,3 +1,4 @@
+// src/components/RideList.js
 import React, { useEffect, useState } from "react";
 import { getAvailableRides, joinRide } from "../services/api";
 import "./RideList.css";
@@ -11,9 +12,11 @@ const RideList = () => {
   }, []);
 
   const handleJoin = (rideId) => {
-    joinRide(rideId, user._id).then(() =>
-      alert("Joined the ride successfully!")
-    );
+    joinRide(rideId, user._id).then(() => {
+      alert("Joined the ride successfully!");
+      // Refresh the ride list to show updated passengers count
+      getAvailableRides().then((res) => setRides(res.data));
+    });
   };
 
   return (
@@ -25,19 +28,13 @@ const RideList = () => {
         rides.map((ride) => (
           <div key={ride._id} className="ride-card">
             <p>
-              <strong>From:</strong> {ride.pickup}
+              <strong>Source:</strong> {ride.pickup}
             </p>
             <p>
-              <strong>To:</strong> {ride.destination}
+              <strong>Destination:</strong> {ride.destination}
             </p>
             <p>
-              <strong>Driver:</strong> {ride.driver.name}
-            </p>
-            <p>
-              <strong>Fare:</strong> ₹{ride.fare}
-            </p>
-            <p>
-              <strong>Scheduled Time:</strong>{" "}
+              <strong>Availability Time:</strong>{" "}
               {ride.scheduledTime
                 ? new Date(ride.scheduledTime).toLocaleString()
                 : "ASAP"}
@@ -49,9 +46,17 @@ const RideList = () => {
             )}
             {ride.status === "confirmed" && (
               <div className="confirmed-info">
-                <p>Ride Confirmed!</p>
-                <p>Estimated Time: {ride.estimatedTime} mins</p>
-                <p>Final Fare: ₹{ride.finalFare}</p>
+                <p>
+                  <strong>Ride Confirmed!</strong>
+                </p>
+                <p>Estimated Time: {ride.estimatedTime} minutes</p>
+                <p>Total Price: ₹{ride.finalFare}</p>
+                <p>
+                  Your Share: ₹
+                  {ride.passengers && ride.passengers.length > 0
+                    ? (ride.finalFare / (ride.passengers.length + 1)).toFixed(2)
+                    : ride.finalFare}
+                </p>
               </div>
             )}
           </div>

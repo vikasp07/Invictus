@@ -6,22 +6,22 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 
 dotenv.config();
+
 const app = express();
 const server = http.createServer(app);
-const io = socketio(server, {
-  cors: { origin: "*" },
-});
+const io = socketio(server, { cors: { origin: "*" } });
 
 app.use(cors());
 app.use(express.json());
 
+// Connect to MongoDB
 mongoose
   .connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
   .then(() => console.log("MongoDB Connected"))
-  .catch((err) => console.log(err));
+  .catch((err) => console.error(err));
 
 // Import routes
 app.use("/auth", require("./routes/auth"));
@@ -29,12 +29,12 @@ app.use("/rides", require("./routes/rides"));
 app.use("/admin", require("./routes/admin"));
 app.use("/feedback", require("./routes/feedback"));
 
-// Socket.io for real-time location tracking
+// Socket.io for real-time tracking (if needed)
 io.on("connection", (socket) => {
   console.log("New client connected: " + socket.id);
 
   socket.on("locationUpdate", (data) => {
-    // Broadcast location update to all connected clients (or filter by ride ID)
+    // Broadcast location update to all clients (or filter by ride id as needed)
     io.emit("locationUpdate", data);
   });
 

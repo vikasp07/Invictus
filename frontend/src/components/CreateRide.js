@@ -18,8 +18,6 @@ const mumbaiAreas = [
 const CreateRide = () => {
   const [pickup, setPickup] = useState(mumbaiAreas[0]);
   const [destination, setDestination] = useState(mumbaiAreas[1]);
-  const [distance, setDistance] = useState("");
-  const [duration, setDuration] = useState("");
   const [scheduledTime, setScheduledTime] = useState("");
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("user"));
@@ -31,11 +29,9 @@ const CreateRide = () => {
         driver: user._id,
         pickup,
         destination,
-        distance: parseFloat(distance),
-        duration: parseFloat(duration),
         scheduledTime,
       });
-      alert("Ride created successfully!");
+      alert("Ride requested successfully!");
       navigate("/rides");
     } catch (err) {
       alert("Error creating ride");
@@ -44,7 +40,7 @@ const CreateRide = () => {
 
   return (
     <div className="create-ride-container">
-      <h2>Create Ride</h2>
+      <h2>Request Ride</h2>
       <form className="create-ride-form" onSubmit={handleSubmit}>
         <label>Pickup Location:</label>
         <select
@@ -70,31 +66,16 @@ const CreateRide = () => {
             </option>
           ))}
         </select>
-        <input
-          type="number"
-          className="ride-input"
-          placeholder="Distance (km)"
-          value={distance}
-          onChange={(e) => setDistance(e.target.value)}
-          required
-        />
-        <input
-          type="number"
-          className="ride-input"
-          placeholder="Duration (min)"
-          value={duration}
-          onChange={(e) => setDuration(e.target.value)}
-          required
-        />
+        <label>Ride Time:</label>
         <input
           type="datetime-local"
           className="ride-input"
-          placeholder="Scheduled Time (optional)"
           value={scheduledTime}
           onChange={(e) => setScheduledTime(e.target.value)}
+          required
         />
         <button className="btn" type="submit">
-          Create Ride
+          Request Ride
         </button>
       </form>
     </div>

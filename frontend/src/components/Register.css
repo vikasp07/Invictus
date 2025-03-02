@@ -1,61 +1,56 @@
-.register-container {
+.ride-list-container {
   width: 90%;
-  max-width: 400px;
-  margin: 40px auto;
-  padding: 30px;
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  animation: fadeIn 1.5s ease-out;
-  text-align: center;
+  max-width: 800px;
+  margin: 30px auto;
+  animation: slideUp 1s ease-out;
 }
 
-.register-form {
-  display: flex;
-  flex-direction: column;
+.ride-list-container h2 {
+  color: #1e90ff;
+  margin-bottom: 20px;
 }
 
-.register-input {
-  width: 100%;
-  padding: 12px;
-  margin: 10px 0;
-  border: 1px solid #ccc;
+.ride-card {
+  border: 1px solid #ddd;
+  padding: 15px;
+  margin: 15px 0;
+  border-radius: 6px;
+  transition: transform 0.3s ease;
+}
+
+.ride-card:hover {
+  transform: scale(1.02);
+}
+
+.confirmed-info {
+  background-color: #e0ffe0;
+  padding: 10px;
   border-radius: 4px;
-  transition: border-color 0.3s ease;
-}
-
-.register-input:focus {
-  border-color: #1e90ff;
-  outline: none;
-}
-
-.radio-group {
-  margin: 10px 0;
-  display: flex;
-  justify-content: space-around;
-  font-weight: bold;
+  margin-top: 10px;
 }
 
 .btn {
-  padding: 10px 20px;
+  padding: 8px 16px;
   background-color: #1e90ff;
   color: #fff;
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  margin-top: 10px;
   transition: background-color 0.3s ease;
-  font-weight: bold;
 }
 
 .btn:hover {
   background-color: #1c86ee;
 }
 
-@keyframes fadeIn {
+@keyframes slideUp {
   from {
+    transform: translateY(50px);
     opacity: 0;
   }
   to {
+    transform: translateY(0);
     opacity: 1;
   }
 }
