@@ -19,3 +19,5 @@ export const getAdminUsers = () => API.get("/admin/users");
 export const getAnalytics = () => API.get("/admin/analytics");
 export const confirmRide = (rideId, data) =>
   API.post(`/rides/confirm/${rideId}`, data);
+// New function to get the current ride for a user:
+export const getCurrentRide = (userId) => API.get(`/rides/current/${userId}`);

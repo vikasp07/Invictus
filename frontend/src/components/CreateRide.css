@@ -1,47 +1,74 @@
+/* Full container background to match the user landing page */
 .create-ride-container {
-  width: 90%;
-  max-width: 500px;
-  margin: 30px auto;
-  background: #fff;
-  padding: 25px;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  animation: slideUp 1s ease-out;
+  position: relative;
+  background: url("https://via.placeholder.com/1500x500/99ccee/ffffff?text=Hero+Background")
+    no-repeat center center;
+  background-size: cover;
+  min-height: 100vh;
+  padding: 40px 20px;
+  color: #fff;
+}
+
+/* Dark overlay */
+.create-ride-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 1;
+}
+
+/* Ensure form content is above overlay */
+.create-ride-form,
+.create-ride-container h2 {
+  position: relative;
+  z-index: 2;
 }
 
 .create-ride-container h2 {
-  color: #1e90ff;
+  text-align: center;
   margin-bottom: 20px;
+  font-size: 2rem;
 }
 
 .create-ride-form {
-  display: flex;
-  flex-direction: column;
+  max-width: 500px;
+  margin: 0 auto;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 30px;
+  border-radius: 8px;
+  color: #333;
+  animation: slideUp 1s ease-out;
 }
 
 .create-ride-form label {
   margin: 10px 0 5px;
   font-weight: bold;
+  display: block;
 }
 
-.ride-input,
-select {
+.create-ride-form select,
+.create-ride-form .ride-input {
+  width: 100%;
   padding: 12px;
-  margin: 10px 0;
+  margin-bottom: 15px;
   border: 1px solid #ccc;
   border-radius: 4px;
 }
 
 .btn {
-  padding: 10px 20px;
+  width: 100%;
+  padding: 12px;
   background-color: #1e90ff;
   color: #fff;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
   font-weight: bold;
-  margin-top: 15px;
+  transition: background-color 0.3s ease;
 }
 
 .btn:hover {

@@ -3,7 +3,7 @@ const Ride = require("../models/Ride");
 const router = express.Router();
 
 // Create a ride request (user booking)
-// Now only accepts: driver, pickup, destination, scheduledTime
+// Only requires: driver, pickup, destination, scheduledTime.
 router.post("/create", async (req, res) => {
   const { driver, pickup, destination, scheduledTime } = req.body;
   const ride = new Ride({
@@ -12,7 +12,7 @@ router.post("/create", async (req, res) => {
     destination,
     scheduledTime,
     status: "pending",
-    fare: null, // to be set by owner on confirmation
+    fare: null, // To be set by owner upon confirmation.
     estimatedTime: null,
     route: [],
     currentLocation: pickup,
@@ -43,7 +43,7 @@ router.post("/join/:rideId", async (req, res) => {
   try {
     const ride = await Ride.findById(req.params.rideId);
     if (ride) {
-      // Prevent duplicate join – add only if not already joined
+      // Avoid duplicate joins.
       if (!ride.passengers.includes(userId)) {
         ride.passengers.push(userId);
       }
@@ -57,7 +57,7 @@ router.post("/join/:rideId", async (req, res) => {
   }
 });
 
-// Owner confirms a ride by providing estimated time and total fare
+// Owner confirms a ride by providing estimated time and total fare.
 router.post("/confirm/:rideId", async (req, res) => {
   const { ownerId, estimatedTime, finalFare } = req.body;
   try {
@@ -79,20 +79,16 @@ router.post("/confirm/:rideId", async (req, res) => {
   }
 });
 
-// (Optional) Update ride’s current location for real-time tracking
-router.post("/update-location/:rideId", async (req, res) => {
-  const { currentLocation } = req.body;
+// Get current ride details for a given user (if exists)
+router.get("/current/:userId", async (req, res) => {
   try {
-    const ride = await Ride.findById(req.params.rideId);
-    if (ride) {
-      ride.currentLocation = currentLocation;
-      await ride.save();
-      res.json({ message: "Location updated", ride });
-    } else {
-      res.status(404).json({ error: "Ride not found" });
-    }
+    const ride = await Ride.findOne({
+      status: { $in: ["confirmed", "ongoing"] },
+      $or: [{ driver: req.params.userId }, { passengers: req.params.userId }],
+    }).populate("driver", "name phone");
+    res.json(ride);
   } catch (err) {
-    res.status(400).json({ error: "Error updating location" });
+    res.status(500).json({ error: "Error fetching current ride" });
   }
 });
 

@@ -1,16 +1,19 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import LandingPage from "./components/LandingPage";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
+import LandingPage from "./components/LandingPage"; // Public landing page
 import Login from "./components/Login";
 import Register from "./components/Register";
-import RideList from "./components/RideList";
-import CreateRide from "./components/CreateRide";
-import MapTracker from "./components/MapTracker";
-import OwnerDashboard from "./components/OwnerDashboard";
+import UserLandingPage from "./components/UserLandingPage"; // Regular user's landing page
+import OwnerLandingPage from "./components/OwnerLandingPage"; // Owner's landing page
+import CreateRide from "./components/CreateRide"; // Page where user can create a ride
+import RideList from "./components/RideList"; // Page showing available (shared) rides
+import MapTracker from "./components/MapTracker"; // Optional: track rides on a map
+import OwnerDashboard from "./components/OwnerDashboard"; // For owners to confirm rides
 import Feedback from "./components/Feedback";
 import SOS from "./components/SOS";
-import AdminDashboard from "./components/AdminDashboard";
-import "./styles.css"; // Global styles if needed
+import "./styles.css";
 
 function App() {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -18,77 +21,49 @@ function App() {
   return (
     <Router>
       <div className="App">
-        {user ? (
-          <nav className="navbar">
-            <h2>RideShare</h2>
-            <div className="nav-links">
-              {user.role === "user" ? (
-                <>
-                  <Link to="/rides">Book Ride</Link>
-                  <Link to="/create">Create Ride</Link>
-                </>
-              ) : (
-                <Link to="/owner">Owner Dashboard</Link>
-              )}
-              <Link to="/map">Track Ride</Link>
-              <Link to="/feedback">Feedback</Link>
-              <Link to="/sos">SOS</Link>
-              {/* Only admin user (with specific ID) can see admin page */}
-              {user._id === "ADMIN123" && <Link to="/admin">Admin</Link>}
-              <Link
-                to="/logout"
-                onClick={() => {
-                  localStorage.clear();
-                  window.location.href = "/";
-                }}
-              >
-                Logout
-              </Link>
-            </div>
-          </nav>
-        ) : (
-          <nav className="navbar">
-            <h2>RideShare</h2>
-            <div className="nav-links">
-              <Link to="/login">Login</Link>
-              <Link to="/register">Register</Link>
-            </div>
-          </nav>
-        )}
-
-        <Routes>
+        <Navbar user={user} />
+        <div className="content">
           {user ? (
-            <>
-              {user.role === "user" ? (
-                <>
-                  <Route path="/rides" element={<RideList />} />
-                  <Route path="/create" element={<CreateRide />} />
-                </>
-              ) : (
-                <Route path="/owner" element={<OwnerDashboard />} />
-              )}
-              <Route path="/map" element={<MapTracker />} />
-              <Route path="/feedback" element={<Feedback />} />
-              <Route path="/sos" element={<SOS />} />
-              {user._id === "ADMIN123" && (
-                <Route path="/admin" element={<AdminDashboard />} />
-              )}
-              <Route path="*" element={<RideList />} />
-            </>
+            user.role === "user" ? (
+              <Routes>
+                {/* Regular user landing page */}
+                <Route path="/user-landing" element={<UserLandingPage />} />
+                {/* User can create ride and share ride */}
+                <Route path="/create" element={<CreateRide />} />
+                <Route path="/rides" element={<RideList />} />
+                <Route path="/map" element={<MapTracker />} />
+                <Route path="/feedback" element={<Feedback />} />
+                <Route path="/sos" element={<SOS />} />
+                {/* Fallback to user landing page */}
+                <Route path="*" element={<UserLandingPage />} />
+              </Routes>
+            ) : user.role === "owner" ? (
+              <Routes>
+                {/* Owner landing page */}
+                <Route path="/owner-landing" element={<OwnerLandingPage />} />
+                {/* Owner dashboard for confirming rides */}
+                <Route path="/owner-dashboard" element={<OwnerDashboard />} />
+                <Route path="/map" element={<MapTracker />} />
+                <Route path="/feedback" element={<Feedback />} />
+                <Route path="/sos" element={<SOS />} />
+                {/* Fallback to owner landing page */}
+                <Route path="*" element={<OwnerLandingPage />} />
+              </Routes>
+            ) : null
           ) : (
-            <>
+            <Routes>
+              {/* Public routes for non-logged in users */}
               <Route path="/" element={<LandingPage />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="*" element={<LandingPage />} />
-            </>
+            </Routes>
           )}
-        </Routes>
+        </div>
+        <Footer />
       </div>
     </Router>
   );
 }
 
 export default App;
-
-// CnESdw9LKlUX3IeHAAAF

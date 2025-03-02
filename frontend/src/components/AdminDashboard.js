@@ -3,7 +3,7 @@ import { getAdminRides, getAdminUsers, getAnalytics } from "../services/api";
 import { useNavigate } from "react-router-dom";
 import "./AdminDashboard.css";
 
-const ADMIN_ID = "ADMIN123"; // Set this to the actual admin user id
+const ADMIN_ID = "67c3b61b91e3d9c0fa214e76"; // Set this to the actual admin user id
 
 const AdminDashboard = () => {
   const [rides, setRides] = useState([]);

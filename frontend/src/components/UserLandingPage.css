@@ -1,0 +1,172 @@
+/* UserLandingPage.css */
+
+.user-landing {
+  font-family: "Arial", sans-serif;
+  color: #fff;
+  position: relative;
+}
+
+/* Hero Section with background and dark overlay */
+.hero-section {
+  position: relative;
+  background: url("https://via.placeholder.com/1500x500/99ccee/ffffff?text=Hero+Background")
+    no-repeat center center;
+  background-size: cover;
+  min-height: 60vh;
+}
+
+/* Dark overlay added to the hero section */
+.hero-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(
+    0,
+    0,
+    0,
+    0.6
+  ); /* Increase opacity for darker overlay */
+  z-index: 1;
+}
+
+/* Ensure nav and content are above the overlay */
+.hero-nav {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+}
+
+.logo {
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+
+.hero-links a {
+  margin: 0 15px;
+  color: #fff;
+  font-weight: bold;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.hero-links a:hover {
+  color: #ffeb3b;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 600px;
+  margin: 80px auto 60px;
+  text-align: center;
+  padding: 20px;
+  animation: slideIn 1s ease-out;
+}
+
+.hero-content h1 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+}
+
+.hero-content p {
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+/* Search Box Styling */
+.search-box {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  padding: 20px;
+}
+
+.search-field {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 150px;
+}
+
+.search-field label {
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #fff;
+}
+
+.search-field input {
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+}
+
+/* Search button styling */
+.btn-search {
+  background-color: #1e90ff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  align-self: center;
+}
+
+.btn-search:hover {
+  background-color: #1c86ee;
+}
+
+/* Info Section Styling */
+.info-section {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 40px 20px;
+  justify-content: space-around;
+  background-color: #fff;
+  color: #333;
+}
+
+.info-card {
+  flex: 1 1 300px;
+  margin: 20px;
+  background-color: #fafafa;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 1.5s ease-out;
+}
+
+.info-card h2 {
+  color: #1e90ff;
+  margin-bottom: 10px;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(-50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
